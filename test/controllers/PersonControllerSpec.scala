@@ -11,6 +11,7 @@ import play.api.Application
 import dao.PersonDAO
 import dao.PersonDAOMock
 import play.api.inject.guice.GuiceableModule.fromPlayBinding
+import com.typesafe.config.ConfigFactory
 
 /**
  * with OneAppPerTest
@@ -30,6 +31,11 @@ class PersonControllerSpec extends PlaySpec with OneAppPerTest {
       val personDAO: PersonDAO = app2PersonDao(app)
       val persons = personDAO.findAll
       persons.map(_.name) must contain("Mocked Person")
+      
+      // this should be only available in test,
+      // from application.test.conf
+      val cf = ConfigFactory.load()
+      info(cf.getString("my.key"))
     }
   }
 }

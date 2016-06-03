@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "org.scalatestplus" % "play_2.11" % "1.4.0"
 )
 
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+javaOptions in Test += "-Dconfig.resource=" + System.getProperty("config.resource", "application.test.conf")
 
+resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 routesGenerator := InjectedRoutesGenerator
