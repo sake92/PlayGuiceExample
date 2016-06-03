@@ -1,4 +1,4 @@
-This is your new Play application
+Play Guice example
 =================================
 
-This file will be packaged with your application, when using `activator dist`.
+This app tries to show Guice DI in ScalaTestPlus tests...
