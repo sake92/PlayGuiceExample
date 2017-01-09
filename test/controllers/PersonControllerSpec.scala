@@ -12,11 +12,12 @@ import dao.PersonDAO
 import dao.PersonDAOMock
 import play.api.inject.guice.GuiceableModule.fromPlayBinding
 import com.typesafe.config.ConfigFactory
+import org.scalatest.concurrent.ScalaFutures
 
 /**
  * with OneAppPerTest
  */
-class PersonControllerSpec extends PlaySpec with OneAppPerTest {
+class PersonControllerSpec extends PlaySpec with OneAppPerTest with ScalaFutures {
 
   override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder()
     .overrides(bind(classOf[PersonDAO]).to(classOf[PersonDAOMock]))
@@ -29,8 +30,11 @@ class PersonControllerSpec extends PlaySpec with OneAppPerTest {
       // this should return PersonDAOMock, because we've overriden it
       val app2PersonDao = play.api.Application.instanceCache[PersonDAO]
       val personDAO: PersonDAO = app2PersonDao(app)
-      val persons = personDAO.findAll
-      persons.map(_.name) must contain("Mocked Person")
+      val personsFuture = personDAO.findAll
+      
+      whenReady(personsFuture){ persons =>
+        persons.map(_.name) must contain("Mocked Person")
+      }
       
       // this should be only available in test,
       // from application.test.conf
@@ -43,7 +47,7 @@ class PersonControllerSpec extends PlaySpec with OneAppPerTest {
 /**
  * with OneAppPerSuite
  */
-class PersonControllerSpec2 extends PlaySpec  with OneAppPerSuite {
+class PersonControllerSpec2 extends PlaySpec  with OneAppPerSuite with ScalaFutures{
 
   implicit override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind(classOf[PersonDAO]).to(classOf[PersonDAOMock]))
@@ -56,8 +60,11 @@ class PersonControllerSpec2 extends PlaySpec  with OneAppPerSuite {
       // this should return PersonDAOMock, because we've overriden it
       val app2PersonDao = play.api.Application.instanceCache[PersonDAO]
       val personDAO: PersonDAO = app2PersonDao(app)
-      val persons = personDAO.findAll
-      persons.map(_.name) must contain("Mocked Person")
+      val personsFuture = personDAO.findAll
+      
+      whenReady(personsFuture){ persons =>
+        persons.map(_.name) must contain("Mocked Person")
+      }
     }
   }
 }
@@ -65,7 +72,7 @@ class PersonControllerSpec2 extends PlaySpec  with OneAppPerSuite {
 /**
  * 'manually' creating app...
  */
-class PersonControllerSpec3 extends PlaySpec {
+class PersonControllerSpec3 extends PlaySpec with ScalaFutures{
 
   val app = new GuiceApplicationBuilder()
     .overrides(bind(classOf[PersonDAO]).to(classOf[PersonDAOMock]))
@@ -78,8 +85,11 @@ class PersonControllerSpec3 extends PlaySpec {
       // this should return PersonDAOMock, because we've overriden it
       val app2PersonDao = play.api.Application.instanceCache[PersonDAO]
       val personDAO: PersonDAO = app2PersonDao(app)
-      val persons = personDAO.findAll
-      persons.map(_.name) must contain("Mocked Person")
+      val personsFuture = personDAO.findAll
+      
+      whenReady(personsFuture){ persons =>
+        persons.map(_.name) must contain("Mocked Person")
+      }
     }
   }
 }

@@ -1,11 +1,12 @@
 package services
 
 import javax.inject.Inject
-import models.Person
+import scala.concurrent.Future
 import dao.PersonDAO
+import models.Person
 
 class PersonService @Inject() (personDAO: PersonDAO) {
   
-  def findAll: Seq[Person] = personDAO.findAll
+  def findAll: Future[Seq[Person]] = personDAO.findAll
   
 }

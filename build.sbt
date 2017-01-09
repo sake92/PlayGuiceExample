@@ -6,8 +6,10 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.6"
 
-libraryDependencies ++= Seq(
-  "org.scalatestplus" % "play_2.11" % "1.4.0"
+libraryDependencies ++= Seq(  
+  "com.typesafe.play" %% "play-slick" % "1.1.1",
+  "com.h2database" % "h2" % "1.4.187",
+  "org.scalatestplus" %% "play" % "1.4.0" % "test"
 )
 
 javaOptions in Test += "-Dconfig.resource=" + System.getProperty("config.resource", "application.test.conf")

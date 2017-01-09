@@ -1,5 +1,6 @@
 package dao
 
+import scala.concurrent.Future
 import models.Person
 
 class PersonDAOMock extends PersonDAO {
@@ -11,9 +12,13 @@ class PersonDAOMock extends PersonDAO {
       age = 100
     ))
 
-  def findAll: Seq[Person] = {
+  override def findAll: Future[Seq[Person]] = Future.successful {
     println("Hello from mock DAO!")
     persons
   }
+  
+  override def insert(p: Person): Future[Int] = Future.successful(1)
+  
+  override def createTables(): Future[Unit] = Future.successful{()}
 
 }
